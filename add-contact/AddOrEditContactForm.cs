@@ -37,7 +37,7 @@ namespace add_contact
         }
         public Contact? Contact { get; private set; }
         /// <summary>
-        /// Made a new contact, or edit an existing one.
+        /// Make a new contact, or edit an existing one.
         /// </summary>
         public DialogResult ShowDialog(IWin32Window owner, object? args = null)
         {
