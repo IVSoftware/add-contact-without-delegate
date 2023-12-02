@@ -39,10 +39,12 @@ namespace add_contact
         /// <summary>
         /// Make a new contact, or edit an existing one.
         /// </summary>
-        public DialogResult ShowDialog(IWin32Window owner, object? args = null)
+        public DialogResult ShowDialog(Form owner, object? args = null)
         {
+            Owner = owner;
             if (args is Contact contact)
             {
+                Text = "Edit Contact";
                 textBoxName.Text = contact.Name;
             }
             else localClearForm();
@@ -50,6 +52,7 @@ namespace add_contact
             
             void localClearForm()
             {
+                Text = "Add Contact";
                 foreach (var textBox in Controls.OfType<TextBox>()) textBox.Clear();
                 foreach (var combobox in Controls.OfType<ComboBox>()) combobox.SelectedIndex = -1;
             }
