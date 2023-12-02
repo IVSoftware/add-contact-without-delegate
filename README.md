@@ -1,6 +1,6 @@
-# Add or Edit Contact with ShowDialog
+﻿# Add or Edit Contact with ShowDialog
 
-This is a bit tricky. Your question title is about learning to use delegates, and Jimi's answer has given that a good treatment. But, your post states that your primary concern is:
+This is a bit tricky. Your question starts out as being about learning to use delegates, and Jimi's answer has given that a good treatment [▲]. But, your post (as it reads today) states that your primary concern is:
 
 >#1. Am I approaching this problem in a completely non-best practice way? 
 
@@ -11,6 +11,8 @@ ___
 The `ShowDialog()` method is already well-suited for what you're doing. Unlike the `Show` method, the `Form.Handle` does not dispose as a result of closing the dialog, so you can show it repeatedly without consequence. To use it this way, you would make it a member of your `MainForm` class, and wait for the `MainForm.Disposed` event to dispose its `Handle`.
 
 Since `AddOrEditContactForm` keeps its state, no event is required. Just check whether the operation was accepted or canceled, and inspect the `Contact` property if it's known to be valid.
+
+[![add contact work flow][1]][1]
 
 ```
 public partial class MainForm : Form
@@ -46,7 +48,7 @@ public partial class MainForm : Form
 ```
 ___
 
-The, to optionally make this a multi-purpose Add or Edit form, just overload the `ShowDialog` to accept a `Contact` to preload, and of none is provided clear all the controls to give the user a fresh start.
+Then, to optionally make this a multi-purpose Add or Edit form, just overload the `ShowDialog` to accept a `Contact` to preload, and of none is provided clear all the controls to give the user a fresh start.
 
 ```
 public partial class AddOrEditContactForm : Form
@@ -78,10 +80,12 @@ public partial class AddOrEditContactForm : Form
     /// <summary>
     /// Make a new contact, or edit an existing one.
     /// </summary>
-    public DialogResult ShowDialog(IWin32Window owner, object? args = null)
+    public DialogResult ShowDialog(Form owner, object? args = null)
     {
+        Owner = owner;
         if (args is Contact contact)
         {
+            Text = "Edit Contact";
             textBoxName.Text = contact.Name;
         }
         else localClearForm();
@@ -89,6 +93,7 @@ public partial class AddOrEditContactForm : Form
             
         void localClearForm()
         {
+            Text = "Add Contact";
             foreach (var textBox in Controls.OfType<TextBox>()) textBox.Clear();
             foreach (var combobox in Controls.OfType<ComboBox>()) combobox.SelectedIndex = -1;
         }
@@ -107,3 +112,6 @@ public class Contact
     public override string ToString() => $"Name: {Name}";
 }
 ```
+
+
+  [1]: https://i.stack.imgur.com/Bh7u3.png
